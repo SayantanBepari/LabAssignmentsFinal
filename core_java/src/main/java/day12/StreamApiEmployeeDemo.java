@@ -2,6 +2,9 @@ package day12;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class StreamApiEmployeeDemo {
 
@@ -15,6 +18,13 @@ public class StreamApiEmployeeDemo {
 		list.add(new Employee_ISD(28, "Abes", 5595.4555));
 		list.add(new Employee_ISD(34, "Aain", 4412.082));
 		list.add(new Employee_ISD(21, "Aco", 8125.614));
+		
+		
+		System.out.println(list.stream()
+					.map(Employee_ISD::getSalary)
+					.reduce(0.0,(a,b)->(a+b))   );
+		
+		
 		
 		list.stream()
 				.filter(e -> e.getEmpId()>20)
@@ -37,8 +47,25 @@ public class StreamApiEmployeeDemo {
 				.filter(emp -> emp.getEmpName().charAt(0)=='A')
 				.sorted(Comparator.comparing(Employee_ISD::getEmpId)
 						.thenComparing(Employee_ISD::getEmpName)
-						.thenComparing(Employee_ISD::getSalary))
+						.thenComparing(emp -> emp.getSalary()))
 				.forEach(System.out::println);
+		
+		
+				//.forEach(System.out::println);
+	System.out.println(
+				list.stream()
+				//.filter(e -> e.getEmpId()==28)
+				.collect(Collectors.groupingBy(emp -> emp.getEmpId(),
+						Collectors.averagingDouble(emp-> emp.getSalary()))));
+				//.forEach(System.out::println);
+				//.mapToDouble(emp-> emp.getSalary()).avera
+				//.getAsDouble()
+			
+		Map<Integer,Long> idCount = list.stream()
+												.collect(Collectors.groupingBy(Employee_ISD::getEmpId,
+														Collectors.counting()));
+		System.out.println(idCount);
+				
 		
 	}
 
